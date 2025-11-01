@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.gestion_usuarios.usuarios.DTO.UsuarioDTO;
 import com.gestion_usuarios.usuarios.exception.ResourceNotFoundException;
+import com.gestion_usuarios.usuarios.model.ResponseWrapper;
 import com.gestion_usuarios.usuarios.model.Usuario;
 import com.gestion_usuarios.usuarios.service.UsuarioService;
 
@@ -117,7 +118,7 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUsuario(@PathVariable UUID id) {
+    public ResponseEntity<?> deleteUsuario(@PathVariable UUID id) {
         log.info("Recibiendo solicitud para eliminar el usuario con ID: {}", id);
         if (id == null) {
             log.error("El ID del usuario no puede ser nulo");
@@ -126,7 +127,11 @@ public class UsuarioController {
         try {
             usuarioService.deleteUsuario(id);
             log.debug("Controller: Usuario con ID {} eliminado", id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok(
+                    new ResponseWrapper<>(
+                            "Usuario eliminado exitosamente",
+                            0,
+                            null));
         } catch (Exception e) {
             throw e;
         }

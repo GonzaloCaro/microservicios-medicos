@@ -23,6 +23,7 @@ import com.gestion_usuarios.usuarios.DTO.AreaDTO;
 import com.gestion_usuarios.usuarios.hateoas.AreaModelAssembler;
 import com.gestion_usuarios.usuarios.mapper.AreaMapper;
 import com.gestion_usuarios.usuarios.model.Area;
+import com.gestion_usuarios.usuarios.model.ResponseWrapper;
 import com.gestion_usuarios.usuarios.service.AreaService;
 
 import jakarta.validation.Valid;
@@ -89,7 +90,7 @@ public class AreaController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteArea(@PathVariable UUID id) {
+    public ResponseEntity<?> deleteArea(@PathVariable UUID id) {
         log.info("Recibiendo solicitud para eliminar el área con ID: {}", id);
         if (id == null) {
             log.error("El ID del área no puede ser nulo");
@@ -98,7 +99,11 @@ public class AreaController {
         try {
             areaService.deleteArea(id);
             log.debug("Controller: Área eliminada con ID: {}", id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok(
+                    new ResponseWrapper<>(
+                            "Área eliminada exitosamente",
+                            0,
+                            null));
         } catch (Exception e) {
             return ResponseEntity.status(500).build();
         }

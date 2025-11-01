@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gestion_usuarios.usuarios.DTO.UsuarioDTO;
 import com.gestion_usuarios.usuarios.hateoas.RolModelAssembler;
 import com.gestion_usuarios.usuarios.mapper.RolMapper;
+import com.gestion_usuarios.usuarios.model.ResponseWrapper;
 import com.gestion_usuarios.usuarios.model.Rol;
 import com.gestion_usuarios.usuarios.model.Usuario;
 import com.gestion_usuarios.usuarios.service.RolService;
@@ -101,7 +102,7 @@ public class RolController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteRol(@PathVariable UUID id) {
+    public ResponseEntity<?> deleteRol(@PathVariable UUID id) {
         log.info("Recibiendo solicitud para eliminar el rol con ID: {}", id);
         if (id == null) {
             log.error("El ID del rol no puede ser nulo");
@@ -110,7 +111,11 @@ public class RolController {
         try {
             rolService.deleteRol(id);
             log.debug("Controller: Rol eliminado con ID: {}", id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok(
+                    new ResponseWrapper<>(
+                            "Rol eliminado exitosamente",
+                            0,
+                            null));
         } catch (Exception e) {
             throw e;
         }
