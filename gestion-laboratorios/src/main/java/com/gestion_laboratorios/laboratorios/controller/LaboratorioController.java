@@ -68,7 +68,7 @@ public class LaboratorioController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EntityModel<Laboratorio>> getLaboratorioById(java.util.UUID id) {
+    public ResponseEntity<EntityModel<Laboratorio>> getLaboratorioById(UUID id) {
         log.info("Recibiendo solicitud para obtener el laboratorio con ID: {}", id);
         Laboratorio laboratorio = laboratorioService.getLaboratorioById(id);
 

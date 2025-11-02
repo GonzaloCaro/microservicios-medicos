@@ -70,7 +70,7 @@ public class AsignacionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EntityModel<Asignacion>> getAsignacionById(java.util.UUID id) {
+    public ResponseEntity<EntityModel<Asignacion>> getAsignacionById(@PathVariable UUID id) {
         log.info("Recibiendo solicitud para obtener la asignacion con ID: {}", id);
         Asignacion asignacion = asignacionService.getAsignacionById(id);
 
@@ -85,20 +85,27 @@ public class AsignacionController {
     }
 
     @PostMapping
-    public ResponseEntity<EntityModel<Asignacion>> createAsignacion(@Valid @RequestBody AsignacionDTO asignacion) {
-        log.info("Recibiendo solicitud para crear una nueva asignacion: {}", asignacion);
-        if (asignacion == null) {
-            log.warn("La asignacion proporcionada es nula");
-            throw new IllegalArgumentException("La asignacion no puede ser nula");
+    public ResponseEntity<EntityModel<Asignacion>> createAsignacion(@Valid @RequestBody AsignacionDTO asignacionDTO) {
+        log.info("Recibiendo solicitud para crear una nueva asignación: {}", asignacionDTO);
+
+        if (asignacionDTO == null) {
+            log.warn("La asignación proporcionada es nula");
+            throw new IllegalArgumentException("La asignación no puede ser nula");
         }
+
         try {
-            Asignacion createdAsignacion = asignacionService
-                    .createAsignacion(asignacionMapper.toEntity(asignacion));
-            log.debug("Controller: Asignacion creada: {}", createdAsignacion);
-            return ResponseEntity.status(HttpStatus.CREATED)
+            // El servicio se encarga de validar si el paciente existe o crear uno nuevo
+            Asignacion createdAsignacion = asignacionService.crearAsignacion(asignacionDTO);
+
+            log.debug("Controller: Asignación creada exitosamente con ID {}", createdAsignacion.getId());
+
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
                     .body(asignacionModelAssembler.toModel(createdAsignacion));
+
         } catch (Exception e) {
-            throw e;
+            log.error("Error al crear la asignación: {}", e.getMessage(), e);
+            throw e; // o podrías envolverlo en una excepción custom tipo AsignacionCreationException
         }
     }
 

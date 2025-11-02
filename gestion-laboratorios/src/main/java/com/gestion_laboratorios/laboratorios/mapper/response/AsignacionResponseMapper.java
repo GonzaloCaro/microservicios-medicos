@@ -1,9 +1,8 @@
-package com.gestion_laboratorios.laboratorios.mapper;
+package com.gestion_laboratorios.laboratorios.mapper.response;
 
 import org.springframework.stereotype.Component;
 
 import com.gestion_laboratorios.laboratorios.DTO.AnalisisDTO;
-import com.gestion_laboratorios.laboratorios.DTO.AsignacionDTO;
 import com.gestion_laboratorios.laboratorios.DTO.LaboratorioDTO;
 import com.gestion_laboratorios.laboratorios.DTO.PacienteDTO;
 import com.gestion_laboratorios.laboratorios.DTO.response.AsignacionResponseDTO;
@@ -13,18 +12,7 @@ import com.gestion_laboratorios.laboratorios.model.Laboratorio;
 import com.gestion_laboratorios.laboratorios.model.Paciente;
 
 @Component
-public class AsignacionMapper {
-    public Asignacion toEntity(AsignacionDTO asignacionDTO) {
-        Asignacion asignacion = new Asignacion();
-        asignacion.setId(asignacionDTO.getId());
-        asignacion.setLaboratorioId(asignacionDTO.getLaboratorioId());
-        asignacion.setUsuarioId(asignacionDTO.getUsuarioId());
-        asignacion.setAnalisisId(asignacionDTO.getAnalisisId());
-        asignacion.setPacienteId(asignacionDTO.getPacienteId());
-        asignacion.setDetalle(asignacionDTO.getDetalle());
-        asignacion.setFechaAsignacion(asignacionDTO.getFechaAsignacion());
-        return asignacion;
-    }
+public class AsignacionResponseMapper {
 
     public AsignacionResponseDTO toDto(Asignacion asignacion) {
         if (asignacion == null)
@@ -57,8 +45,10 @@ public class AsignacionMapper {
         return PacienteDTO.builder()
                 .id(paciente.getId())
                 .rut(paciente.getRut())
+                .dv(paciente.getDv())
                 .nombrePaciente(paciente.getNombrePaciente())
                 .apellidoPaciente(paciente.getApellidoPaciente())
+                .edad(paciente.getEdad())
                 .telefono(paciente.getTelefono())
                 .build();
     }

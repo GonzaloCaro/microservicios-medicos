@@ -22,18 +22,25 @@ public class Asignacion {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "LABORATORIO_ID")
+    @JoinColumn(name = "laboratorio_id", nullable = false)
     private Laboratorio laboratorio;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "analisis_id", nullable = false)
+    private Analisis analisis;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "paciente_id", nullable = false)
+    private Paciente paciente;
+
     @Column(name = "usuario_id", nullable = false)
     private UUID usuarioId;
+
     @Column(name = "fecha_asignacion", nullable = false)
     private LocalDateTime fechaAsignacion;
-    @Column(name = "nombre_paciente", nullable = false)
-    private String nombrePaciente;
-    @Column(name = "apellido_paciente", nullable = false)
-    private String apellidoPaciente;
-    @Column(name = "tipo_prueba", nullable = false)
-    private String tipoPrueba;
+
+    @Column(name = "detalle", nullable = false)
+    private String detalle;
 
     // Getters y Setters
     public UUID getId() {
@@ -44,12 +51,23 @@ public class Asignacion {
         this.id = id;
     }
 
+    public Laboratorio getLaboratorio() {
+        return laboratorio;
+    }
+
+    public void setLaboratorio(Laboratorio laboratorio) {
+        this.laboratorio = laboratorio;
+    }
+
     public UUID getLaboratorioId() {
         return laboratorio.getId();
     }
 
-    public void setLaboratorioId(UUID laboratorio_id) {
-        this.laboratorio.setId(laboratorio_id);
+    public void setLaboratorioId(UUID id) {
+        if (this.laboratorio == null) {
+            this.laboratorio = new Laboratorio();
+        }
+        this.laboratorio.setId(id);
     }
 
     public UUID getUsuarioId() {
@@ -60,6 +78,44 @@ public class Asignacion {
         this.usuarioId = usuarioId;
     }
 
+    public Analisis getAnalisis() {
+        return analisis;
+    }
+
+    public void setAnalisis(Analisis analisis) {
+        this.analisis = analisis;
+    }
+
+    public Paciente getPaciente() {
+        return paciente;
+    }
+
+    public void setPaciente(Paciente paciente) {
+        this.paciente = paciente;
+    }
+
+    public UUID getPacienteId() {
+        return paciente.getId();
+    }
+
+    public UUID getAnalisisId() {
+        return analisis.getId();
+    }
+
+    public void setAnalisisId(UUID analisisId) {
+        if (this.analisis == null) {
+            this.analisis = new Analisis();
+        }
+        this.analisis.setId(analisisId);
+    }
+
+    public void setPacienteId(UUID pacienteId) {
+        if (this.paciente == null) {
+            this.paciente = new Paciente();
+        }
+        this.paciente.setId(pacienteId);
+    }
+
     public LocalDateTime getFechaAsignacion() {
         return fechaAsignacion;
     }
@@ -68,28 +124,11 @@ public class Asignacion {
         this.fechaAsignacion = fechaAsignacion;
     }
 
-    public String getNombrePaciente() {
-        return nombrePaciente;
+    public String getDetalle() {
+        return detalle;
     }
 
-    public void setNombrePaciente(String nombrePaciente) {
-        this.nombrePaciente = nombrePaciente;
+    public void setDetalle(String detalle) {
+        this.detalle = detalle;
     }
-
-    public String getApellidoPaciente() {
-        return apellidoPaciente;
-    }
-
-    public void setApellidoPaciente(String apellidoPaciente) {
-        this.apellidoPaciente = apellidoPaciente;
-    }
-
-    public String getTipoPrueba() {
-        return tipoPrueba;
-    }
-
-    public void setTipoPrueba(String tipoPrueba) {
-        this.tipoPrueba = tipoPrueba;
-    }
-
 }
