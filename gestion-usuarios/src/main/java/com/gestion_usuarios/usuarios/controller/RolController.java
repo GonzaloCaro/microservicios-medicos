@@ -5,7 +5,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.hateoas.CollectionModel;
@@ -20,12 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gestion_usuarios.usuarios.DTO.UsuarioDTO;
 import com.gestion_usuarios.usuarios.hateoas.RolModelAssembler;
 import com.gestion_usuarios.usuarios.mapper.RolMapper;
 import com.gestion_usuarios.usuarios.model.ResponseWrapper;
 import com.gestion_usuarios.usuarios.model.Rol;
-import com.gestion_usuarios.usuarios.model.Usuario;
 import com.gestion_usuarios.usuarios.service.RolService;
 
 import jakarta.validation.Valid;
