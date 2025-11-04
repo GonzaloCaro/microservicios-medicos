@@ -51,12 +51,29 @@ public class UsuarioService {
     @Transactional
     public Usuario updateUsuario(UUID id, Usuario usuarioDetails) {
         log.info("Actualizando el usuario con ID: {}", id);
+
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
 
-        usuario.setNombre(usuarioDetails.getNombre());
-        usuario.setEmail(usuarioDetails.getEmail());
-        usuario.setContrasena(usuarioDetails.getContrasena());
+        // Actualizar solo si vienen datos
+        if (usuarioDetails.getNombre() != null) {
+            usuario.setNombre(usuarioDetails.getNombre());
+        }
+
+        if (usuarioDetails.getApellido() != null) {
+            usuario.setApellido(usuarioDetails.getApellido());
+        }
+
+        if (usuarioDetails.getUserName() != null) {
+            usuario.setUserName(usuarioDetails.getUserName());
+        }
+
+        if (usuarioDetails.getEmail() != null) {
+            usuario.setEmail(usuarioDetails.getEmail());
+        }
+        if (usuarioDetails.getContrasena() != null) {
+            usuario.setContrasena(passwordEncoder.encode(usuarioDetails.getContrasena()));
+        }
 
         return usuarioRepository.save(usuario);
     }
