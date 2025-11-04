@@ -3,6 +3,9 @@ package com.gestion_usuarios.usuarios.mapper;
 import org.springframework.stereotype.Component;
 
 import com.gestion_usuarios.usuarios.DTO.UsuarioDTO;
+import com.gestion_usuarios.usuarios.model.Area;
+import com.gestion_usuarios.usuarios.model.Rol;
+import com.gestion_usuarios.usuarios.model.RoleUser;
 import com.gestion_usuarios.usuarios.model.Usuario;
 
 @Component
@@ -17,8 +20,20 @@ public class UsuarioMapper {
         usuario.setEmail(usuarioDTO.getEmail());
         usuario.setContrasena(usuarioDTO.getContrasena());
 
-        usuario.setRoleId(usuarioDTO.getRoleId());
-        usuario.setAreaId(usuarioDTO.getAreaId());
+        if (usuarioDTO.getRoleId() != null && usuarioDTO.getAreaId() != null) {
+            RoleUser roleUser = new RoleUser();
+
+            Rol rol = new Rol();
+            rol.setId(usuarioDTO.getRoleId());
+            roleUser.setRol(rol);
+
+            Area area = new Area();
+            area.setId(usuarioDTO.getAreaId());
+            roleUser.setArea(area);
+
+            roleUser.setUsuario(usuario);
+            usuario.setRole(roleUser);
+        }
         return usuario;
     }
 
@@ -30,8 +45,6 @@ public class UsuarioMapper {
         usuarioDTO.setUserName(usuario.getUserName());
         usuarioDTO.setEmail(usuario.getEmail());
         usuarioDTO.setContrasena(usuario.getContrasena());
-        usuarioDTO.setRoleId(usuario.getRoleId());
-        usuarioDTO.setAreaId(usuario.getAreaId());
         return usuarioDTO;
     }
 }

@@ -6,12 +6,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "usuarios")
@@ -36,8 +36,9 @@ public class Usuario {
     @Column(name = "CONTRASENA", nullable = false)
     private String contrasena;
 
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RoleUser> roles = new ArrayList<>();
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private RoleUser role;
 
     // Getters y Setters
     public UUID getId() {
@@ -88,61 +89,12 @@ public class Usuario {
         this.userName = userName;
     }
 
-    public UUID getRoleId() {
-        if (roles != null && !roles.isEmpty()) {
-            return roles.get(0).getRol().getId();
-        }
-        return null;
+    public RoleUser getRole() {
+        return role;
     }
 
-    public void setRoleId(UUID roleId) {
-        if (roles == null) {
-            roles = new ArrayList<>();
-        }
-
-        // si no hay registro, crea uno vacío
-        if (roles.isEmpty()) {
-            roles.add(new RoleUser());
-        }
-
-        RoleUser relation = roles.get(0);
-        if (relation.getRol() == null) {
-            Rol rol = new Rol();
-            rol.setId(roleId);
-            relation.setRol(rol);
-        } else {
-            relation.getRol().setId(roleId);
-        }
-
-        relation.setUsuario(this);
-    }
-
-    public UUID getAreaId() {
-        if (roles != null && !roles.isEmpty()) {
-            return roles.get(0).getArea().getId();
-        }
-        return null;
-    }
-
-    public void setAreaId(UUID areaId) {
-        if (roles == null) {
-            roles = new ArrayList<>();
-        }
-
-        if (roles.isEmpty()) {
-            roles.add(new RoleUser());
-        }
-
-        RoleUser relation = roles.get(0);
-        if (relation.getArea() == null) {
-            Area area = new Area();
-            area.setId(areaId);
-            relation.setArea(area);
-        } else {
-            relation.getArea().setId(areaId);
-        }
-
-        relation.setUsuario(this);
+    public void setRole(RoleUser role) {
+        this.role = role;
     }
 
     @Override

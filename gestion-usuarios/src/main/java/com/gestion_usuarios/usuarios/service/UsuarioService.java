@@ -1,13 +1,19 @@
 package com.gestion_usuarios.usuarios.service;
 
+import com.gestion_usuarios.usuarios.encoder.PasswordEncoder;
 import com.gestion_usuarios.usuarios.model.Usuario;
 import com.gestion_usuarios.usuarios.repository.UsuarioRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,9 +22,11 @@ import java.util.UUID;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private PasswordEncoder passwordEncoder;
 
     public UsuarioService(UsuarioRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = new PasswordEncoder();
     }
 
     public List<Usuario> getAllUsuarios() {
@@ -29,6 +37,7 @@ public class UsuarioService {
     @Transactional
     public Usuario createUsuario(Usuario usuario) {
         log.info("Creando un nuevo usuario: {}", usuario);
+        usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
         return usuarioRepository.save(usuario);
     }
 
@@ -56,6 +65,17 @@ public class UsuarioService {
     public void deleteUsuario(UUID id) {
         log.info("Eliminando el usuario con ID: {}", id);
         usuarioRepository.deleteById(id);
+    }
+
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+        Usuario u = usuarioRepository.findByUserName(userName)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        if (u.getRole() != null && u.getRole().getRol() != null) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + u.getRole().getRol().getNombre().toUpperCase()));
+        }
+        return new org.springframework.security.core.userdetails.User(
+                u.getUserName(), u.getContrasena(), authorities);
     }
 
 }
