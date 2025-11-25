@@ -40,6 +40,14 @@ public class AsignacionService {
     }
 
     @Transactional
+    public Asignacion getAsignacionByUserId(UUID userId) {
+        log.info("Obteniendo la asignacion con medico ID: {}", userId);
+        return asignacionRepository.findByUsuarioId(userId)
+                .orElseThrow(
+                        () -> new RuntimeException("Asignacion no encontrada para el medico con ID: " + userId));
+    }
+
+    @Transactional
     public Asignacion crearAsignacion(AsignacionDTO dto) {
 
         Paciente paciente;

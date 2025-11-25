@@ -21,12 +21,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gestion_laboratorios.laboratorios.DTO.AsignacionDTO;
-import com.gestion_laboratorios.laboratorios.DTO.LaboratorioDTO;
 import com.gestion_laboratorios.laboratorios.exception.ResourceNotFoundException;
 import com.gestion_laboratorios.laboratorios.hateoas.AsignacionModelAssembler;
 import com.gestion_laboratorios.laboratorios.mapper.AsignacionMapper;
 import com.gestion_laboratorios.laboratorios.model.Asignacion;
-import com.gestion_laboratorios.laboratorios.model.Laboratorio;
 import com.gestion_laboratorios.laboratorios.model.ResponseWrapper;
 import com.gestion_laboratorios.laboratorios.service.AsignacionService;
 
@@ -77,6 +75,21 @@ public class AsignacionController {
         if (asignacion == null) {
             log.warn("Asignacion no encontrada con ID: {}", id);
             throw new ResourceNotFoundException("Asignacion no encontrada con ID: " + id);
+        }
+        log.debug("Controller: Asignacion encontrada: {}", asignacion);
+
+        EntityModel<Asignacion> asignacionModel = asignacionModelAssembler.toModel(asignacion);
+        return ResponseEntity.ok(asignacionModel);
+    }
+
+    @GetMapping("/usuario/{userId}")
+    public ResponseEntity<EntityModel<Asignacion>> getAsignacionByUserId(@PathVariable UUID userId) {
+        log.info("Recibiendo solicitud para obtener la asignacion con usuario ID: {}", userId);
+        Asignacion asignacion = asignacionService.getAsignacionByUserId(userId);
+
+        if (asignacion == null) {
+            log.warn("Asignacion no encontrada con usuario ID: {}", userId);
+            throw new ResourceNotFoundException("Asignacion no encontrada con usuario ID: " + userId);
         }
         log.debug("Controller: Asignacion encontrada: {}", asignacion);
 
