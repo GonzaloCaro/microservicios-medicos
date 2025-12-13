@@ -40,25 +40,26 @@ public class AsignacionService {
     }
 
     @Transactional
-    public Asignacion getAsignacionByUserId(UUID userId) {
+    public List<Asignacion> getAsignacionesByUserId(UUID userId) {
         log.info("Obteniendo la asignacion con medico ID: {}", userId);
-        return asignacionRepository.findByUsuarioId(userId)
-                .orElseThrow(
-                        () -> new RuntimeException("Asignacion no encontrada para el medico con ID: " + userId));
+        return asignacionRepository.findByUsuarioId(userId);
     }
 
     @Transactional
     public Asignacion crearAsignacion(AsignacionDTO dto) {
+        log.info("Creando una nueva asignacion");
 
         Paciente paciente;
 
         // 1️⃣ Si llega pacienteId, buscarlo
         if (dto.getPacienteId() != null) {
+            log.info("Buscando paciente con ID: {}", dto.getPacienteId());
             paciente = pacienteRepository.findById(dto.getPacienteId())
                     .orElseThrow(() -> new RuntimeException("Paciente no encontrado"));
         }
         // 2️⃣ Si no llega ID, crear un nuevo paciente
         else {
+            log.info("Creando nuevo paciente");
             paciente = new Paciente();
             paciente.setRut(dto.getRut());
             paciente.setDv(dto.getDv());

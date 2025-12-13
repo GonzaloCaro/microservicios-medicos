@@ -20,5 +20,5 @@ public interface AsignacionRepository extends JpaRepository<Asignacion, UUID> {
     Optional<Asignacion> findById(UUID id);
 
     @EntityGraph(attributePaths = { "laboratorio", "analisis", "paciente" })
-    Optional<Asignacion> findByUsuarioId(UUID usuarioId);
+    List<Asignacion> findByUsuarioId(UUID usuarioId);
 }

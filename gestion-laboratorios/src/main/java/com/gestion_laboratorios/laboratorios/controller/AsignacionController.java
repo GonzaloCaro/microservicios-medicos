@@ -83,18 +83,15 @@ public class AsignacionController {
     }
 
     @GetMapping("/usuario/{userId}")
-    public ResponseEntity<EntityModel<Asignacion>> getAsignacionByUserId(@PathVariable UUID userId) {
-        log.info("Recibiendo solicitud para obtener la asignacion con usuario ID: {}", userId);
-        Asignacion asignacion = asignacionService.getAsignacionByUserId(userId);
-
-        if (asignacion == null) {
-            log.warn("Asignacion no encontrada con usuario ID: {}", userId);
-            throw new ResourceNotFoundException("Asignacion no encontrada con usuario ID: " + userId);
+    public ResponseEntity<List<Asignacion>> getAsignacionesByUserId(@PathVariable UUID userId) {
+        log.info("Recibiendo solicitud para obtener asignaciones usuario ID: {}", userId);
+        List<Asignacion> asignaciones = asignacionService.getAsignacionesByUserId(userId);
+        if (asignaciones.isEmpty()) {
+            // Opcional: Retornar 204 No Content o 200 con lista vacía
+            return ResponseEntity.noContent().build();
         }
-        log.debug("Controller: Asignacion encontrada: {}", asignacion);
 
-        EntityModel<Asignacion> asignacionModel = asignacionModelAssembler.toModel(asignacion);
-        return ResponseEntity.ok(asignacionModel);
+        return ResponseEntity.ok(asignaciones);
     }
 
     @PostMapping
