@@ -22,7 +22,6 @@ import com.gestion_laboratorios.laboratorios.DTO.PacienteDTO;
 import com.gestion_laboratorios.laboratorios.exception.ResourceNotFoundException;
 import com.gestion_laboratorios.laboratorios.hateoas.PacienteModelAssembler;
 import com.gestion_laboratorios.laboratorios.mapper.PacienteMapper;
-import com.gestion_laboratorios.laboratorios.model.Analisis;
 import com.gestion_laboratorios.laboratorios.model.Paciente;
 import com.gestion_laboratorios.laboratorios.service.PacienteService;
 
