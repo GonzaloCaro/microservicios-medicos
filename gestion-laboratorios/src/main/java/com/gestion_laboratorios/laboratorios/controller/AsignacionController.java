@@ -105,6 +105,7 @@ public class AsignacionController {
 
         try {
             // El servicio se encarga de validar si el paciente existe o crear uno nuevo
+            log.debug("Controller: Enviando datos al servicio para crear la asignación: {}", asignacionDTO);
             Asignacion createdAsignacion = asignacionService.crearAsignacion(asignacionDTO);
 
             log.debug("Controller: Asignación creada exitosamente con ID {}", createdAsignacion.getId());

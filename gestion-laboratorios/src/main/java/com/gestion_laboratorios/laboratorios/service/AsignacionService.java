@@ -2,6 +2,7 @@ package com.gestion_laboratorios.laboratorios.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -47,31 +48,38 @@ public class AsignacionService {
 
     @Transactional
     public Asignacion crearAsignacion(AsignacionDTO dto) {
-        log.info("Creando una nueva asignacion");
+        log.info("Creando una nueva asignacion", dto);
 
         Paciente paciente;
 
-        // 1️⃣ Si llega pacienteId, buscarlo
+        // Si llega pacienteId, buscarlo
         if (dto.getPacienteId() != null) {
             log.info("Buscando paciente con ID: {}", dto.getPacienteId());
             paciente = pacienteRepository.findById(dto.getPacienteId())
                     .orElseThrow(() -> new RuntimeException("Paciente no encontrado"));
         }
-        // 2️⃣ Si no llega ID, crear un nuevo paciente
+        // Si no llega ID, crear un nuevo paciente
         else {
-            log.info("Creando nuevo paciente");
-            paciente = new Paciente();
-            paciente.setRut(dto.getRut());
-            paciente.setDv(dto.getDv());
-            paciente.setEdad(dto.getEdad());
-            paciente.setNombrePaciente(dto.getNombrePaciente());
-            paciente.setApellidoPaciente(dto.getApellidoPaciente());
-            paciente.setTelefono(dto.getTelefono());
-            paciente = pacienteRepository.save(paciente);
+            Optional<Paciente> existente = pacienteRepository.findByRut(dto.getRut());
+
+            if (existente.isPresent()) {
+                paciente = existente.get();
+            } else {
+                paciente = new Paciente();
+                paciente.setRut(dto.getRut());
+                paciente.setDv(dto.getDv());
+                paciente.setEdad(dto.getEdad());
+                paciente.setNombrePaciente(dto.getNombrePaciente());
+                paciente.setApellidoPaciente(dto.getApellidoPaciente());
+                paciente.setTelefono(dto.getTelefono());
+
+                paciente = pacienteRepository.save(paciente);
+            }
         }
 
         // 3️⃣ Crear la asignación
         Asignacion asignacion = new Asignacion();
+        asignacion.setPaciente(paciente);
         asignacion.setLaboratorioId(dto.getLaboratorioId());
         asignacion.setUsuarioId(dto.getUsuarioId());
         asignacion.setAnalisisId(dto.getAnalisisId());
