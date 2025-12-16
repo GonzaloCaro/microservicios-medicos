@@ -15,3 +15,6 @@
 ### instale dependencias + compile:
 
 `mvn clean package`
+
+### Correr Test
+`mvn clean verify`
