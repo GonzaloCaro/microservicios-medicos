@@ -3,6 +3,9 @@ package com.gestion_laboratorios.laboratorios.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -23,14 +26,17 @@ public class Asignacion {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "laboratorio_id", nullable = false)
+    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private Laboratorio laboratorio;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "analisis_id", nullable = false)
+    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private Analisis analisis;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "paciente_id", nullable = false)
+    @JsonIgnoreProperties({ "asignaciones", "hibernateLazyInitializer", "handler" })
     private Paciente paciente;
 
     @Column(name = "usuario_id", nullable = false)

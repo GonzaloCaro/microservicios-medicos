@@ -28,43 +28,43 @@ public class AsignacionService {
         this.pacienteRepository = pacienteRepository;
     }
 
+    // El @EntityGraph del repositorio se encarga de traer las relaciones aquí
     public List<Asignacion> getAllAsignaciones() {
         log.info("Obteniendo todas las asignaciones");
         return asignacionRepository.findAll();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Asignacion getAsignacionById(UUID id) {
         log.info("Obteniendo la asignacion con ID: {}", id);
         return asignacionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Asignacion no encontrada con ID: " + id));
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Asignacion> getAsignacionesByUserId(UUID userId) {
-        log.info("Obteniendo la asignacion con medico ID: {}", userId);
+        log.info("Obteniendo asignaciones para el usuario ID: {}", userId);
         return asignacionRepository.findByUsuarioId(userId);
     }
 
     @Transactional
     public Asignacion crearAsignacion(AsignacionDTO dto) {
-        log.info("Creando una nueva asignacion", dto);
+        log.info("Creando una nueva asignacion para RUT: {}", dto.getRut());
 
         Paciente paciente;
 
-        // Si llega pacienteId, buscarlo
         if (dto.getPacienteId() != null) {
-            log.info("Buscando paciente con ID: {}", dto.getPacienteId());
+            log.info("Buscando paciente existente por ID: {}", dto.getPacienteId());
             paciente = pacienteRepository.findById(dto.getPacienteId())
-                    .orElseThrow(() -> new RuntimeException("Paciente no encontrado"));
-        }
-        // Si no llega ID, crear un nuevo paciente
-        else {
+                    .orElseThrow(() -> new RuntimeException("Paciente no encontrado con ID provisto"));
+        } else {
             Optional<Paciente> existente = pacienteRepository.findByRut(dto.getRut());
 
             if (existente.isPresent()) {
+                log.info("Paciente encontrado por RUT");
                 paciente = existente.get();
             } else {
+                log.info("Creando nuevo paciente");
                 paciente = new Paciente();
                 paciente.setRut(dto.getRut());
                 paciente.setDv(dto.getDv());
@@ -77,7 +77,6 @@ public class AsignacionService {
             }
         }
 
-        // 3️⃣ Crear la asignación
         Asignacion asignacion = new Asignacion();
         asignacion.setPaciente(paciente);
         asignacion.setLaboratorioId(dto.getLaboratorioId());
@@ -91,14 +90,23 @@ public class AsignacionService {
     }
 
     @Transactional
-    public Asignacion updateAsignacion(UUID id, Asignacion asignacionDetails) {
+    public Asignacion updateAsignacion(UUID id, AsignacionDTO dto) {
         log.info("Actualizando la asignacion con ID: {}", id);
+
         Asignacion asignacion = asignacionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Asignacion no encontrada con ID: " + id));
 
-        asignacion.setLaboratorioId(asignacionDetails.getLaboratorioId());
-        asignacion.setUsuarioId(asignacionDetails.getUsuarioId());
-        asignacion.setFechaAsignacion(asignacionDetails.getFechaAsignacion());
+        if (dto.getLaboratorioId() != null) {
+            asignacion.setLaboratorioId(dto.getLaboratorioId());
+        }
+
+        if (dto.getAnalisisId() != null) {
+            asignacion.setAnalisisId(dto.getAnalisisId());
+        }
+
+        if (dto.getDetalle() != null) {
+            asignacion.setDetalle(dto.getDetalle());
+        }
 
         return asignacionRepository.save(asignacion);
     }
@@ -106,7 +114,9 @@ public class AsignacionService {
     @Transactional
     public void deleteAsignacion(UUID id) {
         log.info("Eliminando la asignacion con ID: {}", id);
+        if (!asignacionRepository.existsById(id)) {
+            throw new RuntimeException("No se puede eliminar, asignacion no encontrada");
+        }
         asignacionRepository.deleteById(id);
     }
-
 }

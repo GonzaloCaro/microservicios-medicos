@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gestion_laboratorios.laboratorios.DTO.AsignacionDTO;
 import com.gestion_laboratorios.laboratorios.exception.ResourceNotFoundException;
 import com.gestion_laboratorios.laboratorios.hateoas.AsignacionModelAssembler;
-import com.gestion_laboratorios.laboratorios.mapper.AsignacionMapper;
 import com.gestion_laboratorios.laboratorios.model.Asignacion;
 import com.gestion_laboratorios.laboratorios.model.ResponseWrapper;
 import com.gestion_laboratorios.laboratorios.service.AsignacionService;
@@ -37,13 +36,11 @@ import lombok.extern.slf4j.Slf4j;
 public class AsignacionController {
 
     private final AsignacionService asignacionService;
-    private final AsignacionMapper asignacionMapper;
     private final AsignacionModelAssembler asignacionModelAssembler;
 
-    public AsignacionController(AsignacionService asignacionService, AsignacionMapper asignacionMapper,
+    public AsignacionController(AsignacionService asignacionService,
             AsignacionModelAssembler asignacionModelAssembler) {
         this.asignacionService = asignacionService;
-        this.asignacionMapper = asignacionMapper;
         this.asignacionModelAssembler = asignacionModelAssembler;
     }
 
@@ -129,8 +126,7 @@ public class AsignacionController {
             throw new IllegalArgumentException("El ID de la asignacion no puede ser nulo");
         }
         try {
-            Asignacion asignacionDetails = asignacionMapper.toEntity(asignacionDTO);
-            Asignacion asignacion = asignacionService.updateAsignacion(id, asignacionDetails);
+            Asignacion asignacion = asignacionService.updateAsignacion(id, asignacionDTO);
             EntityModel<Asignacion> asignacionModel = asignacionModelAssembler.toModel(asignacion);
             return ResponseEntity.ok(asignacionModel);
         } catch (Exception e) {
