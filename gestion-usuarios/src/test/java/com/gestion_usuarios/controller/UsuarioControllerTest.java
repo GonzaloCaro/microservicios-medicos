@@ -153,7 +153,7 @@ class UsuarioControllerTest {
     void createUsuario_Invalido_BadRequest() throws Exception {
         // GIVEN: Body vacío o inválido
         mockMvc.perform(post("/api/usuarios")
-                .contentType(MediaType.APPLICATION_JSON)) // Sin contenido
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 

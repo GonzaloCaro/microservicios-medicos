@@ -7,7 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
-import org.springframework.mock.web.MockHttpServletRequest; // <--- IMPORTANTE: Usar este Mock
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +23,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-// Registramos explícitamente el Controller de prueba y la Configuración
 @WebMvcTest(controllers = SecurityConfigTest.TestController.class)
 @Import({ SecurityConfig.class, SecurityConfigTest.TestController.class })
 class SecurityConfigTest {
@@ -37,7 +36,7 @@ class SecurityConfigTest {
     @Autowired
     private SecurityConfig securityConfig;
 
-    // --- TEST 1: Verificar reglas de URLs ---
+    // Verificar reglas de URLs
 
     @Test
     void requestPrivado_SinToken_DeberiaDar403() throws Exception {
@@ -58,7 +57,7 @@ class SecurityConfigTest {
                 .andExpect(status().isOk());
     }
 
-    // --- TEST 2: Verificar Configuración CORS (Integración HTTP) ---
+    // Verificar Configuración CORS (Integración HTTP)
 
     @Test
     void cors_DeberiaPermitirOrigenLocalhost() throws Exception {
@@ -77,7 +76,7 @@ class SecurityConfigTest {
                 .andExpect(status().isForbidden());
     }
 
-    // --- TEST 3: Unitario Puro del Bean CORS Configuration ---
+    // Unitario CORS Configuration
 
     @Test
     void corsConfigurationSource_DeberiaTenerConfiguracionCorrecta() {

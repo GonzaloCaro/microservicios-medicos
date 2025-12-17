@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RolMapperTest {
 
-    // Instancia directa (Test Unitario Puro)
     private final RolMapper mapper = new RolMapper();
 
     // --- TEST: toDTO (Entity -> DTO) ---

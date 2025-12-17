@@ -20,9 +20,6 @@ class RolModelAssemblerTest {
 
     @BeforeEach
     void setUp() {
-        // --- CONFIGURACIÓN DE CONTEXTO HTTP ---
-        // Necesario para que linkTo() y methodOn() funcionen sin levantar el servidor
-        // real.
         MockHttpServletRequest request = new MockHttpServletRequest();
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
     }
@@ -81,7 +78,6 @@ class RolModelAssemblerTest {
         Rol rolNulo = null;
 
         // WHEN & THEN
-        // Tu código llama a rol.getId() inmediatamente, causando NPE.
         assertThrows(NullPointerException.class, () -> {
             assembler.toModel(rolNulo);
         });

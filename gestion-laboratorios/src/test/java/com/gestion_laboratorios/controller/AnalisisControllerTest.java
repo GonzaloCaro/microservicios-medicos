@@ -7,7 +7,7 @@ import com.gestion_laboratorios.hateoas.AnalisisModelAssembler;
 import com.gestion_laboratorios.mapper.AnalisisMapper;
 import com.gestion_laboratorios.model.Analisis;
 import com.gestion_laboratorios.service.AnalisisService;
-import com.gestion_laboratorios.utils.JwtUtils; // Necesario para evitar error de carga de contexto
+import com.gestion_laboratorios.utils.JwtUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AnalisisController.class)
-@AutoConfigureMockMvc(addFilters = false) // Desactiva seguridad para enfocarse en el controller
+@AutoConfigureMockMvc(addFilters = false) // Desactiva seguridad (Login)
 class AnalisisControllerTest {
 
     @Autowired
@@ -40,7 +40,6 @@ class AnalisisControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    // --- Mocks de Dependencias del Controller ---
     @MockBean
     private AnalisisService analisisService;
 
@@ -50,7 +49,6 @@ class AnalisisControllerTest {
     @MockBean
     private AnalisisModelAssembler analisisModelAssembler;
 
-    // --- Mock Crucial para que SecurityConfig no falle al iniciar ---
     @MockBean
     private JwtUtils jwtUtils;
 

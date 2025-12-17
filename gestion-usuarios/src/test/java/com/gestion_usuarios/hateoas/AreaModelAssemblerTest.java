@@ -20,10 +20,6 @@ class AreaModelAssemblerTest {
 
     @BeforeEach
     void setUp() {
-        // --- CONFIGURACIÓN CRÍTICA ---
-        // Simulamos el contexto de una petición HTTP (Request).
-        // Sin esto, 'linkTo' y 'methodOn' fallan porque no saben cuál es la URL base
-        // del servidor.
         MockHttpServletRequest request = new MockHttpServletRequest();
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
     }
@@ -52,11 +48,6 @@ class AreaModelAssemblerTest {
         Link selfLink = model.getRequiredLink(IanaLinkRelations.SELF);
         String href = selfLink.getHref();
 
-        // MANEJO DE TEMPLATES:
-        // Si tu Controller no tiene @PathVariable explícito, HATEOAS genera
-        // ".../areas/{id}"
-        // Esta lógica hace el test resistente a ese detalle, expandiendo el ID si es
-        // necesario.
         if (selfLink.isTemplated()) {
             href = selfLink.expand(id).getHref();
         }
@@ -85,8 +76,6 @@ class AreaModelAssemblerTest {
         Area areaNula = null;
 
         // WHEN & THEN
-        // Tu código ejecuta 'area.getId()' en la primera línea.
-        // Al ser null, lanza NullPointerException inmediatamente.
         assertThrows(NullPointerException.class, () -> {
             assembler.toModel(areaNula);
         });

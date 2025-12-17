@@ -20,10 +20,6 @@ class UsuarioModelAssemblerTest {
 
     @BeforeEach
     void setUp() {
-        // CONFIGURACIÓN CRÍTICA:
-        // Simulamos un contexto de petición HTTP. Sin esto, 'linkTo' y 'methodOn'
-        // no saben cómo construir la URL base (localhost) y pueden fallar o generar
-        // rutas extrañas.
         MockHttpServletRequest request = new MockHttpServletRequest();
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
     }
