@@ -22,7 +22,7 @@ public class Paciente {
     private UUID id;
     @Column(name = "rut", nullable = false, unique = true)
     private String rut;
-    @Column(name = "dv", nullable = false)
+    @Column(name = "dv", nullable = false, unique = false)
     private String dv;
     @Column(name = "edad", nullable = false)
     private int edad;

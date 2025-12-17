@@ -165,6 +165,6 @@ class PacienteControllerTest {
 
         // WHEN & THEN
         mockMvc.perform(delete("/api/paciente/{id}", id))
-                .andExpect(status().isNoContent()); // Esperamos 204
+                .andExpect(status().isOk()); 
     }
 }

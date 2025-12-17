@@ -94,7 +94,7 @@ public class PacienteController {
         try {
             pacienteService.deletePaciente(id);
             log.info("Paciente con ID {} eliminado exitosamente", id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.status(200).build();
         } catch (Exception e) {
             log.error("Error al eliminar el paciente con ID {}: {}", id, e.getMessage());
             throw new RuntimeException("Error al eliminar el paciente", e);
